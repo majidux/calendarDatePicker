@@ -60,8 +60,11 @@ export default class ModalCalendar extends Component {
         this.props.visibleAndSendSelectedDay(selectedDay);
     };
     
+    
     render() {
         const dayNameInWeek = moment({dialect: 'persian-modern'}).format('ddd');
+        const startOfMonth = moment().startOf('jMonth').format('jYYYY-jMM-jDD hh:mm ddd');
+        const endOfMonth = moment().endOf('jMonth').format('jYYYY-jMM-jDD hh:mm ddd');
         
         let currentMonth = moment({dialect: 'persian-modern'}).format('jMMMM');
         let currentMonthIndex = moment({dialect: 'persian-modern'}).format('jM');
@@ -71,6 +74,30 @@ export default class ModalCalendar extends Component {
         let monthsInYear = moment.months();
         let daysOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
         let dayInMonth = _.range(1, moment.jDaysInMonth(this.state.yearChange, this.state.monthChange) + 1);
+        
+        switch (type) {
+            case 'Sat':
+                num = 0;
+                break;
+            case 'Sun':
+                num = 1;
+                break;
+            case 'Mon':
+                num = 2;
+                break;
+            case 'Tue':
+                num = 3;
+                break;
+            case 'Wed':
+                num = 4;
+                break;
+            case 'Thr':
+                num = 5;
+                break;
+            case 'Fri':
+                num = 6;
+                break;
+        }
         return (
             <Modal
                 hardwareAccelerated={true}
@@ -118,7 +145,8 @@ export default class ModalCalendar extends Component {
                             }
                         </View>
                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{color: '#e45'}}>{dayNameInWeek}</Text>
+                            <Text style={{color: '#e45', fontWeight: '800'}}>{startOfMonth}</Text>
+                            <Text style={{color: '#e45', fontWeight: '800'}}>{endOfMonth}</Text>
                         </View>
                         <FlatList
                             data={months}
