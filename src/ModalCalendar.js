@@ -63,41 +63,23 @@ export default class ModalCalendar extends Component {
     
     render() {
         const dayNameInWeek = moment({dialect: 'persian-modern'}).format('ddd');
-        const startOfMonth = moment().startOf('jMonth').format('jYYYY-jMM-jDD hh:mm ddd');
+        const startOfMonth = moment().startOf('jMonth').format('ddd');
         const endOfMonth = moment().endOf('jMonth').format('jYYYY-jMM-jDD hh:mm ddd');
+        
         
         let currentMonth = moment({dialect: 'persian-modern'}).format('jMMMM');
         let currentMonthIndex = moment({dialect: 'persian-modern'}).format('jM');
         let currentMonthNumber = currentMonthIndex - 1;
         let currentYear = moment({dialect: 'persian-modern'}).format('jYYYY');
-        let currentDay = moment({dialect: 'persian-modern'}).format('ddd');
-        let monthsInYear = moment.months();
+        let currentDayName = moment({dialect: 'persian-modern'}).format('ddd');
+        let currentDayNumber = moment().format('jDD');
+        let monthsInYear = moment.months('jMMMM');
         let daysOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
-        let dayInMonth = _.range(1, moment.jDaysInMonth(this.state.yearChange, this.state.monthChange) + 1);
+        // let dayInMonth = _.range(1, moment.jDaysInMonth(this.state.yearChange, this.state.monthChange) + 1);
+        // let startDayOfMonth = _.range(1,startOfMonth);
+        // dayInMonth.unshift(startDayOfMonth);
         
-        switch (type) {
-            case 'Sat':
-                num = 0;
-                break;
-            case 'Sun':
-                num = 1;
-                break;
-            case 'Mon':
-                num = 2;
-                break;
-            case 'Tue':
-                num = 3;
-                break;
-            case 'Wed':
-                num = 4;
-                break;
-            case 'Thr':
-                num = 5;
-                break;
-            case 'Fri':
-                num = 6;
-                break;
-        }
+        
         return (
             <Modal
                 hardwareAccelerated={true}
@@ -118,7 +100,7 @@ export default class ModalCalendar extends Component {
                             <Text style={styles.yearText}>{currentYear}</Text>
                         </View>
                         <View>
-                            <Text style={styles.dayText}>{currentDay} 13 {currentMonth}</Text>
+                            <Text style={styles.dayText}>{currentDayName}، {currentDayNumber} {currentMonth}</Text>
                         </View>
                     </View>
                     <View style={styles.allFlatList}>
@@ -144,41 +126,41 @@ export default class ModalCalendar extends Component {
                                 )
                             }
                         </View>
-                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{color: '#e45', fontWeight: '800'}}>{startOfMonth}</Text>
-                            <Text style={{color: '#e45', fontWeight: '800'}}>{endOfMonth}</Text>
-                        </View>
+                        {/*<View style={{justifyContent: 'center', alignItems: 'center'}}>*/}
+                        {/*    <Text style={{color: '#e45', fontWeight: '800'}}>{startOfMonth}</Text>*/}
+                        {/*    <Text style={{color: '#e45', fontWeight: '800'}}>{endOfMonth}</Text>*/}
+                        {/*</View>*/}
                         <FlatList
                             data={months}
                             pagingEnabled
                             horizontal
-                            initialScrollIndex={currentMonthNumber}
                             onMomentumScrollBegin={this.onScrollFlatList}
                             onEndReached={this.zeroMonthYearUp}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.daysItemViewFlatList}
                             keyExtractor={(item) => `${item.id}`}
-                            renderItem={({item: {id}}) =>
+                            renderItem={({item: {id},item}) =>
                                 <View style={styles.daysItemViewOutside}>
                                     <FlatList
-                                        data={dayInMonth}
+                                        data={item.days}
                                         numColumns={7}
+                                        showsVerticalScrollIndicator={false}
                                         scrollEnabled={false}
-                                        keyExtractor={(days) => `${days}`}
+                                        keyExtractor={(item) => `${item.day}`}
                                         renderItem={({item}) =>
                                             <TouchableOpacity
-                                                onPress={this.selectDay.bind(this, `${id}/${item}`)}
+                                                onPress={this.selectDay.bind(this, `${id}/${item.day}`)}
                                             >
                                                 <View style={
-                                                    this.state.selectedDay === `${id}/${item}` ?
+                                                    this.state.selectedDay === `${id}/${item.day}` ?
                                                         [styles.daysItem, styles.daysItemSelected] :
                                                         styles.daysItem
                                                 }>
                                                     <Text style={
-                                                        this.state.selectedDay === `${id}/${item}` ?
+                                                        this.state.selectedDay === `${id}/${item.day}` ?
                                                             [styles.daysAmountInMonth, styles.daysAmountInMonthSelected] :
                                                             styles.daysAmountInMonth
-                                                    }>{item}</Text>
+                                                    }>{item.day}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         }
