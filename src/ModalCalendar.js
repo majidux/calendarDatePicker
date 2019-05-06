@@ -62,17 +62,16 @@ export default class ModalCalendar extends Component {
         this.props.visibleAndSendSelectedDay(selectedDay);
     };
     
-    
     render() {
         let currentMonth = moment({dialect: 'persian-modern'}).format('jMMMM');
-        let currentMonthIndex = moment({dialect: 'persian-modern'}).format('jM');
-        let currentMonthNumber = currentMonthIndex - 1;
+        let currentMonthNumber = moment().format('jM')-1;
         let currentYear = moment({dialect: 'persian-modern'}).format('jYYYY');
         let currentDayName = moment({dialect: 'persian-modern'}).format('ddd');
         let currentDayNumber = moment().format('jDD');
         let monthsInYear = moment.months('jMMMM');
         let daysOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
         let currentYearPersian = moment.loadPersian({dialect: 'persian-modern'},'jYYYY');
+        console.log(currentMonthNumber);
         return (
             <Modal
                 hardwareAccelerated={true}
@@ -97,33 +96,33 @@ export default class ModalCalendar extends Component {
                         </View>
                     </View>
                     <View style={styles.allFlatList}>
-                        <FlatList
-                            data={monthsInYear}
-                            showsHorizontalScrollIndicator={false}
-                            horizontal
-                            initialScrollIndex={currentMonthNumber}
-                            pagingEnabled
-                            keyExtractor={(item) => `${item}`}
-                            renderItem={({item}) =>
-                                <View style={styles.monthView}>
-                                    <Text style={styles.currentMonth}>{item} {currentYear}</Text>
-                                </View>
-                            }
-                        />
-                        <View style={styles.daysOfWeekViewAll}>
-                            {
-                                daysOfWeek.map((item, i) =>
-                                    <View style={styles.daysOfWeekViews} key={i}>
-                                        <Text style={styles.daysOfWeekText}>{item}</Text>
-                                    </View>
-                                )
-                            }
-                        </View>
-                        <Text>{this.state.selectedDay}</Text>
+                        {/*<FlatList*/}
+                        {/*    data={monthsInYear}*/}
+                        {/*    showsHorizontalScrollIndicator={false}*/}
+                        {/*    horizontal*/}
+                        {/*    pagingEnabled*/}
+                        {/*    keyExtractor={(item) => `${item}`}*/}
+                        {/*    renderItem={({item}) =>*/}
+                        {/*        <View style={styles.monthView}>*/}
+                        {/*            <Text style={styles.currentMonth}>{item} {currentYear}</Text>*/}
+                        {/*        </View>*/}
+                        {/*    }*/}
+                        {/*/>*/}
+                        {/*<View style={styles.daysOfWeekViewAll}>*/}
+                        {/*    {*/}
+                        {/*        daysOfWeek.map((item, i) =>*/}
+                        {/*            <View style={styles.daysOfWeekViews} key={i}>*/}
+                        {/*                <Text style={styles.daysOfWeekText}>{item}</Text>*/}
+                        {/*            </View>*/}
+                        {/*        )*/}
+                        {/*    }*/}
+                        {/*</View>*/}
                         <FlatList
                             data={months}
                             pagingEnabled
                             horizontal
+                            initialScrollIndex={currentMonthNumber}
+                            extraData={this.state.selectedDay}
                             onMomentumScrollBegin={this.onScrollFlatList}
                             onEndReached={this.zeroMonthYearUp}
                             showsHorizontalScrollIndicator={false}
@@ -131,9 +130,23 @@ export default class ModalCalendar extends Component {
                             keyExtractor={(item) => `${item.id}`}
                             renderItem={({item: {id}, item}) =>
                                 <View style={styles.daysItemViewOutside}>
+                                    <View style={styles.monthView}>
+                                        <Text style={styles.currentMonth}>{item.month} {currentYear}</Text>
+                                    </View>
+                                    <View style={styles.daysOfWeekViewAll}>
+                                        {
+                                            daysOfWeek.map((item, i) =>
+                                                <View style={styles.daysOfWeekViews} key={i}>
+                                                    <Text style={styles.daysOfWeekText}>{item}</Text>
+                                                </View>
+                                            )
+                                        }
+                                    </View>
                                     <FlatList
                                         data={item.days}
                                         numColumns={7}
+                                        extraData={this.state.selectedDay}
+                                        // ListHeaderComponent={this.testView}
                                         showsVerticalScrollIndicator={false}
                                         scrollEnabled={false}
                                         keyExtractor={(item) => `${item.day}`}

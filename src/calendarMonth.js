@@ -4,7 +4,7 @@ import moment from "moment-jalaali";
 let currentYearPersian = moment().format('jYYYY');
 let currentYear = moment.loadPersian({dialect: 'persian-modern'},'jYYYY');
 
-console.log(currentYearPersian);
+
 // شروع ماه فروردین و گرفتن اندازه آن و شیفت کردن آن به روز های باقی مانده
 let farvardin = _.range(1, moment.jDaysInMonth(currentYear, 0) + 1);
 const farvardinSpreadOn = farvardin.map((monthDay, key) => ({...monthDay, ['day']: key+1, offDay: true}));
