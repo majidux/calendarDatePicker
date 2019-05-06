@@ -13,8 +13,6 @@ import {
 } from 'react-native';
 import months from './calendarMonth';
 import moment from 'moment-jalaali';
-import * as _ from "lodash";
-
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -44,6 +42,10 @@ export default class ModalCalendar extends Component {
         this.setState({selectedDay: day})
     };
     
+    selectWrong = () =>{
+        this.setState({selectedDay:'تاریخ و زنگ هشدار'})
+    };
+    
     onScrollFlatList = () => {
         Animated.event([{nativeEvent: {contentOffset: {x: this.state.scrollX}}}]);
         this.setState({monthChange: this.state.monthChange + 1});
@@ -62,11 +64,6 @@ export default class ModalCalendar extends Component {
     
     
     render() {
-        const dayNameInWeek = moment({dialect: 'persian-modern'}).format('ddd');
-        const startOfMonth = moment().startOf('jMonth').format('ddd');
-        const endOfMonth = moment().endOf('jMonth').format('jYYYY-jMM-jDD hh:mm ddd');
-        
-        
         let currentMonth = moment({dialect: 'persian-modern'}).format('jMMMM');
         let currentMonthIndex = moment({dialect: 'persian-modern'}).format('jM');
         let currentMonthNumber = currentMonthIndex - 1;
@@ -75,11 +72,7 @@ export default class ModalCalendar extends Component {
         let currentDayNumber = moment().format('jDD');
         let monthsInYear = moment.months('jMMMM');
         let daysOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
-        // let dayInMonth = _.range(1, moment.jDaysInMonth(this.state.yearChange, this.state.monthChange) + 1);
-        // let startDayOfMonth = _.range(1,startOfMonth);
-        // dayInMonth.unshift(startDayOfMonth);
-        
-        
+        let currentYearPersian = moment.loadPersian({dialect: 'persian-modern'},'jYYYY');
         return (
             <Modal
                 hardwareAccelerated={true}
@@ -126,10 +119,7 @@ export default class ModalCalendar extends Component {
                                 )
                             }
                         </View>
-                        {/*<View style={{justifyContent: 'center', alignItems: 'center'}}>*/}
-                        {/*    <Text style={{color: '#e45', fontWeight: '800'}}>{startOfMonth}</Text>*/}
-                        {/*    <Text style={{color: '#e45', fontWeight: '800'}}>{endOfMonth}</Text>*/}
-                        {/*</View>*/}
+                        <Text>{this.state.selectedDay}</Text>
                         <FlatList
                             data={months}
                             pagingEnabled
@@ -139,7 +129,7 @@ export default class ModalCalendar extends Component {
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.daysItemViewFlatList}
                             keyExtractor={(item) => `${item.id}`}
-                            renderItem={({item: {id},item}) =>
+                            renderItem={({item: {id}, item}) =>
                                 <View style={styles.daysItemViewOutside}>
                                     <FlatList
                                         data={item.days}
@@ -149,15 +139,19 @@ export default class ModalCalendar extends Component {
                                         keyExtractor={(item) => `${item.day}`}
                                         renderItem={({item}) =>
                                             <TouchableOpacity
-                                                onPress={this.selectDay.bind(this, `${id}/${item.day}`)}
+                                                onPress={item.offDay ?
+                                                    this.selectDay.bind(this, `${currentYear}/${id}/${item.day}`)
+                                                    :
+                                                    this.selectWrong
+                                                }
                                             >
                                                 <View style={
-                                                    this.state.selectedDay === `${id}/${item.day}` ?
+                                                    this.state.selectedDay === `${currentYear}/${id}/${item.day}` ?
                                                         [styles.daysItem, styles.daysItemSelected] :
                                                         styles.daysItem
                                                 }>
                                                     <Text style={
-                                                        this.state.selectedDay === `${id}/${item.day}` ?
+                                                        this.state.selectedDay === `${currentYear}/${id}/${item.day}` ?
                                                             [styles.daysAmountInMonth, styles.daysAmountInMonthSelected] :
                                                             styles.daysAmountInMonth
                                                     }>{item.day}</Text>
@@ -259,11 +253,10 @@ const styles = StyleSheet.create({
     daysItem: {
         width: 36,
         height: 36,
-        marginVertical: 5,
+        marginVertical: 2,
         marginHorizontal: 4,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'green',
     },
     daysItemSelected: {
         borderRadius: 50,
