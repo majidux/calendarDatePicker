@@ -96,32 +96,11 @@ export default class ModalCalendar extends Component {
                         </View>
                     </View>
                     <View style={styles.allFlatList}>
-                        {/*<FlatList*/}
-                        {/*    data={monthsInYear}*/}
-                        {/*    showsHorizontalScrollIndicator={false}*/}
-                        {/*    horizontal*/}
-                        {/*    pagingEnabled*/}
-                        {/*    keyExtractor={(item) => `${item}`}*/}
-                        {/*    renderItem={({item}) =>*/}
-                        {/*        <View style={styles.monthView}>*/}
-                        {/*            <Text style={styles.currentMonth}>{item} {currentYear}</Text>*/}
-                        {/*        </View>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<View style={styles.daysOfWeekViewAll}>*/}
-                        {/*    {*/}
-                        {/*        daysOfWeek.map((item, i) =>*/}
-                        {/*            <View style={styles.daysOfWeekViews} key={i}>*/}
-                        {/*                <Text style={styles.daysOfWeekText}>{item}</Text>*/}
-                        {/*            </View>*/}
-                        {/*        )*/}
-                        {/*    }*/}
-                        {/*</View>*/}
                         <FlatList
                             data={months}
                             pagingEnabled
                             horizontal
-                            initialScrollIndex={currentMonthNumber}
+                            initialScrollIndex={2}
                             extraData={this.state.selectedDay}
                             onMomentumScrollBegin={this.onScrollFlatList}
                             onEndReached={this.zeroMonthYearUp}
@@ -212,8 +191,7 @@ const styles = StyleSheet.create({
     className: {
         flex: 1,
         paddingHorizontal: 16,
-        paddingVertical: 40,
-        // justifyContent: 'center',
+        paddingVertical: 50,
         borderRadius: 5,
     },
     calendarHeader: {
@@ -266,7 +244,7 @@ const styles = StyleSheet.create({
     daysItem: {
         width: 36,
         height: 36,
-        marginVertical: 2,
+        marginVertical: 3,
         marginHorizontal: 4,
         alignItems: 'center',
         justifyContent: 'center',
@@ -302,10 +280,10 @@ const styles = StyleSheet.create({
     daysItemViewOutside: {
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'skyblue',
-        width: deviceWidth - 32,
+        // width: deviceWidth - 32,
         paddingHorizontal: 10,
-        // flex: 1,
+        flex:1,
+        backgroundColor:'red'
     },
     currentMonth: {
         fontFamily: 'IRANSans_Medium',
